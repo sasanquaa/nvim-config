@@ -8,6 +8,8 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
 Plug 'doums/darcula'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -48,16 +50,20 @@ syntax on
 set noswapfile
 set nobackup
 set number
+set cursorline
 set nowritebackup
 set updatetime=100
 set signcolumn=number
 
+set statusline+=%{GitStatus()}
 set backspace=start,eol,indent
+set smartindent
+set autoindent
 set shiftwidth=4
 set tabstop=4
+set softtabstop=4
 set expandtab
 set smarttab
-set statusline+=%{GitStatus()}
 
 
 noremap <silent><expr> <Leader><Leader><Leader> incsearch#go(<SID>config_easyfuzzymotion())
@@ -80,7 +86,7 @@ nmap <silent> gr <Plug>(coc-references)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 lua << EOF
-    require'nvim-treesitter.configs'.setup {
+    require("nvim-treesitter.configs").setup {
         ensure_installed = { "c", "cpp", "lua" },
         highlight = {
             enabled = true
@@ -89,6 +95,7 @@ lua << EOF
             enabled = true
         }
     }
+    require("bufferline").setup {}
 EOF
 
 function! s:config_easyfuzzymotion(...) abort
