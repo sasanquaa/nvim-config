@@ -1,15 +1,18 @@
 call plug#begin()
 
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'easymotion/vim-easymotion'
 Plug 'itchyny/lightline.vim'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'pocco81/auto-save.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'tpope/vim-commentary'
-Plug 'airblade/vim-gitgutter'
 Plug 'doums/darcula'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+Plug 'airblade/vim-gitgutter'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -71,7 +74,7 @@ noremap <silent><expr> <Leader><Leader><Leader> incsearch#go(<SID>config_easyfuz
 inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#_select_confirm() : "\<Tab>"
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-nnoremap <silent> K :call ShowDocumentation()<CR>
+nnoremap <silent> K :call CocShowDocumentation()<CR>
 nnoremap ntf :NERDTreeFocus<CR>
 nnoremap ntt :NERDTreeToggle<CR>
 nnoremap ntc :NERDTreeClose<CR>
@@ -82,6 +85,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <Leader>rn <Plug>(coc-rename)
+nmap <Leader>f <Plug>(coc-format-selected)
+
+xmap <Leader>f <Plug>(coc-format-selected)
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -96,6 +103,9 @@ lua << EOF
         }
     }
     require("bufferline").setup {}
+    require("auto-save").setup {
+        write_all_buffers = true
+    }
 EOF
 
 function! s:config_easyfuzzymotion(...) abort
@@ -108,7 +118,7 @@ function! s:config_easyfuzzymotion(...) abort
     \ }), get(a:, 1, {}))
 endfunction
 
-function! ShowDocumentation()
+function! CocShowDocumentation()
     if CocAction('hasProvider', 'hover')
         call CocActionAsync('doHover')
     else
