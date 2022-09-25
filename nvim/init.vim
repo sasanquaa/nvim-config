@@ -79,8 +79,8 @@ endfunction
 
 noremap <silent><expr> <Leader><Leader><Leader> incsearch#go(<SID>config_easyfuzzymotion())
 
-inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#_select_confirm() : "\<Tab>"
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <TAB> coc#pum#visible() ? CocCompletionSelectAndConfirm() : "\<Tab>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? CocCompletionSelectAndConfirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <C-Space coc#refresh()
 
 nnoremap <silent> K :call CocShowDocumentation()<CR>
@@ -105,7 +105,7 @@ xmap <Leader>fs <Plug>(coc-format-selected)
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd VimEnter * if !argc() | NERDTree | endif
-autocmd TextChangedI * call CocEnsureCompletionBackspace()
+autocmd TextChangedI * call CocCompletionEnsureBackspace()
 
 lua << EOF
     require("nvim-treesitter.configs").setup {
@@ -144,8 +144,33 @@ function! CocShowDocumentation()
 endfunction
 
 let s:coc_completion_prev_index = -1
+let s:coc_completion_backspace_disabled = v:false
 
-function CocEnsureCompletionBackspace()
+function! CocCompletionSelectAndConfirm()
+
+    call CocCompletionBackspaceDisable()
+
+    call coc#_select_confirm()
+    call timer_start(11, { -> CocCompletionBackspaceEnable() } )
+
+    return ""
+endfunction
+
+function! CocCompletionBackspaceEnable()
+    let s:coc_completion_backspace_disabled = v:false
+    noa set completeopt+=noinsert
+endfunction
+
+function! CocCompletionBackspaceDisable()
+    let s:coc_completion_backspace_disabled = v:true
+    noa set completeopt-=noinsert
+endfunction
+
+function! CocCompletionEnsureBackspace()
+    if s:coc_completion_backspace_disabled == v:true
+        return
+    endif
+    echom s:coc_completion_backspace_disabled
     let col = col(".") - 1
     if col && !(getline(".")[col - 1] =~# '\s') && coc#pum#visible()
         let info = coc#pum#info()
