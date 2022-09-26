@@ -85,11 +85,11 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? CocCompletionSelectAndConfirm()
 inoremap <silent><expr> <C-Space> coc#refresh()
 
 nnoremap <silent> K :call CocShowDocumentation()<CR>
-nnoremap ntf :NvimTreeFocus<CR>
-nnoremap ntt :NvimTreeToggle<CR>
-nnoremap ntc :NvimTreeClose<CR>
-nnoremap nts :NvimTreeFindFile<CR>
-nnoremap ntr :NvimTreeRefresh<CR>
+nnoremap <silent> ntf :NvimTreeFocus<CR>
+nnoremap <silent> ntt :NvimTreeToggle<CR>
+nnoremap <silent> ntc :NvimTreeClose<CR>
+nnoremap <silent> nts :NvimTreeFindFile<CR>
+nnoremap <silent> ntr :NvimTreeRefresh<CR>
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -118,13 +118,45 @@ lua << EOF
             enabled = true
         }
     }
-    require("nvim-tree").setup {}
-    require("bufferline").setup {}
+    require("nvim-tree").setup {
+        view = {
+            adaptive_size = true,
+            hide_root_folder = true
+        },
+        renderer = {
+            group_empty = true,
+            full_name = true,
+            highlight_git = true,
+            indent_markers= {
+                enable = true
+            }
+        },
+        diagnostics = {
+            enable = true,
+            show_on_dirs = true
+        },
+        filters = {
+            dotfiles = true,
+            custom = { "^gradle" }
+        }
+    }
     require("auto-save").setup {
         enabled = true,
         write_all_buffers = true
     }
     require("toggleterm").setup {}
+    require("bufferline").setup {
+        options = {
+            name_formatter = function(buf)
+                vim.api.nvim_echo({{buf["name"], nil}}, {{true, nil}}, {})
+            end,
+            numbers = "buffer_id",
+            diagnostics = true,
+            diagnostics_update_in_insert = true,
+            show_buffer_icons = true,
+            show_buffer_default_icon = true
+        }
+    }
 EOF
 
 function! s:config_easyfuzzymotion(...) abort
@@ -139,7 +171,7 @@ endfunction
 
 function! OnVimEnter()
     if !argc() 
-       execute 'NvimTreeFocusTree' 
+       execute 'NvimTreeFocus' 
     endif
 
     execute 'TSEnable highlight'
