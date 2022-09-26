@@ -1,6 +1,8 @@
 {
     "suggest.autoTrigger": "always",
     "suggest.virtualText": true,
+    "suggest.maxCompleteItemCount": 10,
+    "snippet.highlight": true,
     "diagnostic.virtualText": true,
     "diagnostic.virtualTextCurrentLineOnly": false,
     "languageserver": {
