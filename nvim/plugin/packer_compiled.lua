@@ -74,20 +74,6 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
-  ["auto-save.nvim"] = {
-    config = { "\27LJ\2\2Z\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\2\fenabled\2\22write_all_buffers\2\nsetup\14auto-save\frequire\0" },
-    loaded = true,
-    path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/auto-save.nvim",
-    url = "https://github.com/pocco81/auto-save.nvim"
-  },
-  ["bufferline.nvim"] = {
-    config = { "\27LJ\2\2H\0\2\3\0\4\0\n6\2\0\0009\2\1\0028\2\0\0029\2\2\2\6\2\3\0X\2\2€+\2\2\0X\3\1€+\2\1\0L\2\2\0\rNvimTree\rfiletype\abo\bvim \2\1\0\5\0\n\0\0156\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\b\0005\2\3\0004\3\3\0005\4\4\0>\4\1\3=\3\5\0023\3\6\0=\3\a\2=\2\t\1B\0\2\1K\0\1\0\foptions\1\0\0\18custom_filter\0\foffsets\1\0\4\ttext\18File Explorer\14separator\2\15text_align\vcenter\rfiletype\rNvimTree\1\0\5\tmode\ttabs\20show_close_icon\1\16diagnostics\bcoc\28show_buffer_close_icons\1\20separator_style\nthick\nsetup\15bufferline\frequire\0" },
-    loaded = false,
-    needs_bufread = false,
-    only_cond = false,
-    path = "/home/sasanqua/.local/share/nvim/site/pack/packer/opt/bufferline.nvim",
-    url = "https://github.com/akinsho/bufferline.nvim"
-  },
   ["coc.nvim"] = {
     loaded = true,
     path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/coc.nvim",
@@ -141,6 +127,11 @@ _G.packer_plugins = {
     path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/kyazdani42/nvim-web-devicons"
   },
+  ["packer.nvim"] = {
+    loaded = true,
+    path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/packer.nvim",
+    url = "https://github.com/wbthomason/packer.nvim"
+  },
   ["toggleterm.nvim"] = {
     config = { "\27LJ\2\0028\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\15toggleterm\frequire\0" },
     loaded = true,
@@ -156,10 +147,19 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/vim-easymotion",
     url = "https://github.com/easymotion/vim-easymotion"
+  },
+  ["vim-surround"] = {
+    loaded = true,
+    path = "/home/sasanqua/.local/share/nvim/site/pack/packer/start/vim-surround",
+    url = "https://github.com/tpope/vim-surround"
   }
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: toggleterm.nvim
+time([[Config for toggleterm.nvim]], true)
+try_loadstring("\27LJ\2\0028\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\15toggleterm\frequire\0", "config", "toggleterm.nvim")
+time([[Config for toggleterm.nvim]], false)
 -- Config for: nvim-treesitter
 time([[Config for nvim-treesitter]], true)
 try_loadstring("\27LJ\2\2ñ\1\0\0\3\0\n\0\r6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\6\0=\2\a\0015\2\b\0=\2\t\1B\0\2\1K\0\1\0\vindent\1\0\1\fenabled\2\14highlight\1\0\2\fenabled\2&additional_vim_regex_highlighting\1\21ensure_installed\1\0\1\27always_show_bufferline\1\1\6\0\0\tjson\6c\bcpp\blua\tjava\nsetup\28nvim-treesitter.configs\frequire\0", "config", "nvim-treesitter")
@@ -172,21 +172,6 @@ time([[Config for gitsigns.nvim]], false)
 time([[Config for nvim-tree.lua]], true)
 try_loadstring("\27LJ\2\2±\2\0\0\4\0\16\0\0196\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\6\0005\3\a\0=\3\b\2=\2\t\0015\2\n\0=\2\v\0015\2\f\0005\3\r\0=\3\14\2=\2\15\1B\0\2\1K\0\1\0\ffilters\vcustom\1\2\0\0\f^gradle\1\0\1\rdotfiles\2\16diagnostics\1\0\2\17show_on_dirs\2\venable\2\rrenderer\19indent_markers\1\0\1\venable\2\1\0\3\14full_name\2\18highlight_git\2\16group_empty\2\tview\1\0\0\1\0\2\18adaptive_size\2\21hide_root_folder\2\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
 time([[Config for nvim-tree.lua]], false)
--- Config for: auto-save.nvim
-time([[Config for auto-save.nvim]], true)
-try_loadstring("\27LJ\2\2Z\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\2\fenabled\2\22write_all_buffers\2\nsetup\14auto-save\frequire\0", "config", "auto-save.nvim")
-time([[Config for auto-save.nvim]], false)
--- Config for: toggleterm.nvim
-time([[Config for toggleterm.nvim]], true)
-try_loadstring("\27LJ\2\0028\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\15toggleterm\frequire\0", "config", "toggleterm.nvim")
-time([[Config for toggleterm.nvim]], false)
-vim.cmd [[augroup packer_load_aucmds]]
-vim.cmd [[au!]]
-  -- Event lazy-loads
-time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au VimEnter * ++once lua require("packer.load")({'bufferline.nvim'}, { event = "VimEnter *" }, _G.packer_plugins)]]
-time([[Defining lazy-load event autocommands]], false)
-vim.cmd("augroup END")
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

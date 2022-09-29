@@ -23,7 +23,22 @@ vim.g['lightline'] = {
 vim.g['incsearch#auto_nohlsearch'] = 1
 vim.g['coc_global_extensions'] = { 'coc-json', 'coc-java', 'coc-vimlsp', 'coc-pairs' }
 
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
+end
+
+local packer_bootstrap = ensure_packer()
+
 require("packer").startup(function(use)
+
+    use { 'wbthomason/packer.nvim' }
 
     use { 'neoclide/coc.nvim', branch = 'release' }
 
@@ -76,42 +91,11 @@ require("packer").startup(function(use)
     end
     }
 
-    use { 'pocco81/auto-save.nvim', config = function()
-        require("auto-save").setup {
-            enabled = true,
-            write_all_buffers = true
-        }
-    end
-    }
-
     use { 'tpope/vim-commentary' }
+    use { 'tpope/vim-surround' }
 
     use { 'akinsho/toggleterm.nvim', tag = '*', config = function()
         require("toggleterm").setup()
-    end
-    }
-
-    use { 'akinsho/bufferline.nvim', tag = 'v2.*', event = 'VimEnter', config = function()
-        require("bufferline").setup {
-            options = {
-                mode = 'tabs',
-                diagnostics = 'coc',
-                offsets = {
-                    {
-                        filetype = 'NvimTree',
-                        text = 'File Explorer',
-                        text_align = 'center',
-                        separator = true
-                    }
-                },
-                separator_style = "thick",
-                custom_filter = function(buf, _)
-                    return vim.bo[buf].filetype ~= 'NvimTree' and true or false
-                end,
-                show_buffer_close_icons = false,
-                show_close_icon = false
-            }
-        }
     end
     }
 
@@ -121,6 +105,10 @@ require("packer").startup(function(use)
     use { 'haya14busa/incsearch-fuzzy.vim' }
 
     use { 'doums/darcula' }
+
+    if packer_bootstrap then
+        require('packer').sync()
+    end
 
 end)
 
@@ -153,12 +141,8 @@ hi GitAddStripe guibg=#313335 ctermbg=236
 hi GitChangeStripe guibg=#313335 ctermbg=236
 hi GitDeleteStripe guibg=#313335 ctermbg=236
 
+hi CursorLine ctermfg=bg guifg=none
 hi EndOfBuffer guifg=bg ctermfg=bg
-
-hi BufferLineFill guibg=bg
-hi BufferLineSeparator guifg=bg
-hi BufferLineBufferSelected cterm=bold gui=bold
-hi BufferLineOffsetSeparator guifg=#606060 guibg=bg
 
 noremap <silent><expr> <Leader><Leader><Leader> incsearch#go(ConfigEasyFuzzyMotion())
 
@@ -218,7 +202,7 @@ function! OnVimEnter()
     execute 'TSEnable indent'
 
     autocmd WinEnter,BufEnter * call StatusLine()
-    autocmd FileType help setlocal syntax=ON
+    autocmd FileType help,asm,ld setlocal syntax=ON
 
 endfunction
 
@@ -283,6 +267,7 @@ vim.cmd('syntax off')
 vim.cmd('set noswapfile')
 vim.cmd('set nobackup')
 vim.cmd('set nowritebackup')
+vim.cmd('set showtabline=0')
 vim.opt.number = true
 vim.opt.termguicolors = true
 vim.opt.cursorline = true

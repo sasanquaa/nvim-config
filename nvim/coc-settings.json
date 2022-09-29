@@ -31,7 +31,7 @@
         }
     },
     "sumneko-lua.enableNvimLuaDev": true,
-    "codeLens.enable": true,
+    "codeLens.enable": false,
     "java.referencesCodeLens.enabled": true,
     "java.implementationsCodeLens.enabled": true,
     "java.signatureHelp.enabled": true,
