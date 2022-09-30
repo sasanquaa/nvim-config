@@ -3,7 +3,8 @@ vim.g['loaded_netrwPlugin'] = 1
 local config = {
     view = {
         adaptive_size = true,
-        hide_root_folder = true
+        hide_root_folder = true,
+        preserve_window_proportions = true
     },
     renderer = {
         group_empty = true,

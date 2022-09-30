@@ -26,3 +26,6 @@ hi GitDeleteStripe guibg=#313335 ctermbg=236
 
 hi CursorLine ctermfg=bg guifg=none
 hi EndOfBuffer guifg=bg ctermfg=bg
+
+hi StatusLineNC guibg=#323232
+hi StatusLine guibg=#323232

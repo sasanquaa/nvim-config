@@ -42,8 +42,6 @@ require("packer").startup(function(use)
     use { 'tpope/vim-commentary' }
     use { 'tpope/vim-surround' }
 
-    use { 'akinsho/toggleterm.nvim', tag = '*', config = function() source_file("toggleterm.lua") end }
-
     use { 'easymotion/vim-easymotion', config = function() source_file("easymotion.vim") end }
     use { 'haya14busa/incsearch.vim' }
     use { 'haya14busa/incsearch-easymotion.vim' }
