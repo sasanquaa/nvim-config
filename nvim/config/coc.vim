@@ -9,6 +9,8 @@ inoremap <silent><expr> <TAB> coc#pum#visible() ? CocCompletionSelectAndConfirm(
 inoremap <silent><expr> <CR> coc#pum#visible() ? CocCompletionSelectAndConfirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <C-Space> coc#refresh()
 
+nnoremap <silent><expr> <c-j> coc#float#has_scroll() ? coc#float#scroll(1, 1) : "\<c-j>"
+nnoremap <silent><expr> <c-k> coc#float#has_scroll() ? coc#float#scroll(0, 1) : "\<c-k>"
 nnoremap <silent> K :call CocShowDocumentation()<CR>
 
 nmap <silent> gd <Plug>(coc-definition)

@@ -32,6 +32,7 @@ require("packer").startup(function(use)
             source_file("nvim-treesitter.vim")
         end
     }
+    use { 'nvim-treesitter/playground' }
 
     use { 'itchyny/lightline.vim', config = function()
         source_file("lightline.lua")

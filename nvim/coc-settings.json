@@ -17,7 +17,7 @@
             ],
             "rootPatterns": [
                 ".ccls",
-                "compile_commands.json",
+                "build/compile_commands.json",
                 ".git/"
             ],
             "initializationOptions": {
@@ -26,7 +26,8 @@
                 },
                 "client": {
                     "snippetSupport": true
-                }
+                },
+                "compilationDatabaseDirectory": "build"
             }
         }
     },

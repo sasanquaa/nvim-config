@@ -20,7 +20,7 @@ local config = {
     },
     filters = {
         dotfiles = true,
-        custom = { "^gradle" }
+        custom = { "^gradle", "^compile_commands.json" }
     }
 }
 
@@ -31,7 +31,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
                 execute ':NvimTreeFocus'
                 for i in range(1, winnr('$'))
                     if getwinvar(i, '&filetype') == 'NvimTree'
-                        call setwinvar(i, '&statusline', '%#Normal#')
+                        call setwinvar(i, '&statusline', '%#StatusLine#')
                         call setwinvar(i, '&signcolumn', 'yes')
                     endif
                 endfor

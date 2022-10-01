@@ -22,4 +22,4 @@ source ~/.config/nvim/lua/plugins.lua
 source ~/.config/nvim/config/theme.vim
 source ~/.config/nvim/config/terminal.vim
 
-autocmd FileType help,asm,ld setlocal syntax=ON
+autocmd FileType help,asm,ld,tsplayground setlocal syntax=ON
