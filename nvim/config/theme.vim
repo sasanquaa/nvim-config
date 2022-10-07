@@ -26,9 +26,18 @@ hi GitAddStripe guibg=#313335 ctermbg=236
 hi GitChangeStripe guibg=#313335 ctermbg=236
 hi GitDeleteStripe guibg=#313335 ctermbg=236
 
-hi CursorLine ctermfg=bg guifg=none
+hi CursorLine ctermbg=none ctermfg=bg guifg=none
 hi EndOfBuffer guifg=bg ctermfg=bg
 
-hi StatusLineNC guibg=#323232
-hi StatusLine guibg=#323232
+hi StatusLineNC ctermbg=8 guibg=#323232
+hi StatusLine ctermbg=8 guibg=#323232
 
+hi DiagnosticSignInfo guifg=lightblue guibg=#313335 ctermfg=4 ctermbg=9
+hi DiagnosticSignWarn guifg=orange guibg=#313335 ctermfg=3 ctermbg=9
+hi DiagnosticSignHint guibg=lightgrey guibg=#313335 ctermfg=7 ctermbg=9
+hi DiagnosticSignError guifg=red guibg=#313335 ctermfg=1 ctermbg=9
+
+hi DiagnosticsUnderlineInfo gui=none cterm=none 
+hi DiagnosticsUnderlineWarn gui=none cterm=none 
+hi DiagnosticsUnderlineHint gui=none cterm=none 
+hi DiagnosticsUnderlineError gui=none cterm=none 

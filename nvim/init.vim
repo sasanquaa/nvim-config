@@ -16,10 +16,16 @@ set noequalalways
 set tabstop=4
 set softtabstop=4
 set expandtab
-set completeopt+=noinsert
+set completeopt=menu,menuone,noinsert
+set pumheight=12
 
 source ~/.config/nvim/lua/plugins.lua
 source ~/.config/nvim/config/theme.vim
 source ~/.config/nvim/config/terminal.vim
 
-autocmd FileType help,asm,ld,tsplayground setlocal syntax=ON
+autocmd FileType help,groovy,asm,ld,tsplayground setlocal syntax=ON
+
+autocmd User EasyMotionPromptBegin let b:lsp_diagnostics_enabled=v:false
+autocmd User EasyMotionPromptEnd let b:lsp_diagnostics_enabled=v:true
+
+let g:node_client_debug = 1
