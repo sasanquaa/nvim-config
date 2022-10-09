@@ -6,7 +6,8 @@ local config = {
     },
     always_show_bufferline = false,
     indent = {
-        enabled = true
+        enabled = true,
+        disable = { 'java' }
     }
 }
 

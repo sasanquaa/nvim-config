@@ -1,43 +1,57 @@
 colorscheme darcula
 
-hi! link CocErrorSign ErrorSign
-hi! link CocWarningSign WarningSign
-hi! link CocInfoSign InfoSign
-hi! link CocHintSign HintSign
-hi! link CocErrorFloat Pmenu
-hi! link CocWarningFloat Pmenu
-hi! link CocInfoFloat Pmenu
-hi! link CocHintFloat Pmenu
-hi! link CocHighlightText IdentifierUnderCaret
-hi! link CocHighlightRead IdentifierUnderCaret
-hi! link CocHighlightWrite IdentifierUnderCaretWrite
-hi! link CocErrorHighlight CodeError
-hi! link CocWarningHighlight CodeWarning
-hi! link CocInfoHighlight CodeInfo
-hi! link CocHintHighlight CodeHint
-
 hi! link GitSignsAdd GitAddStripe
 hi! link GitSignsChange GitChangeStripe
 hi! link GitSignsDelete GitDeleteStripe
 
 hi! link TSKeywordOperator TSKeyword
 
-hi GitAddStripe guibg=#313335 ctermbg=236
-hi GitChangeStripe guibg=#313335 ctermbg=236
-hi GitDeleteStripe guibg=#313335 ctermbg=236
+hi! link CmpItemKindClass TSClass
+hi! link CmpItemKindConstant TSConstant
+hi! link CmpItemKindConstructor TSConstructor
+" hi! link CmpItemKindField TSField
+hi! link CmpItemKindFunction TSFunction
+hi! link CmpItemKindMethod TSMethod
+hi! link CmpItemKindInterface TSClass
+hi! link CmpItemKindKeyword TSKeyword
+hi! link CmpItemKindText TSText
+" hi! link CmpItemKindVariable TSVariable
 
-hi CursorLine ctermbg=none ctermfg=bg guifg=none
+" hi GitAddStripe guibg=#313335 ctermbg=236
+" hi GitChangeStripe guibg=#313335 ctermbg=236
+" hi GitDeleteStripe guibg=#313335 ctermbg=236
+"
+hi GitAddStripe guibg=NONE ctermbg=NONE
+hi GitChangeStripe guibg=NONE ctermbg=NONE
+hi GitDeleteStripe guibg=NONE ctermbg=NONE
+
+hi CursorLine ctermfg=NONE guifg=fg
 hi EndOfBuffer guifg=bg ctermfg=bg
 
-hi StatusLineNC ctermbg=8 guibg=#323232
-hi StatusLine ctermbg=8 guibg=#323232
+hi LineNr ctermbg=NONE guibg=NONE
+hi SignColumn ctermbg=NONE guibg=NONE
+hi StatusLineNC ctermbg=236 guibg=#323232
+hi StatusLine ctermbg=236 guibg=#323232
 
-hi DiagnosticSignInfo guifg=lightblue guibg=#313335 ctermfg=4 ctermbg=9
-hi DiagnosticSignWarn guifg=orange guibg=#313335 ctermfg=3 ctermbg=9
-hi DiagnosticSignHint guibg=lightgrey guibg=#313335 ctermfg=7 ctermbg=9
-hi DiagnosticSignError guifg=red guibg=#313335 ctermfg=1 ctermbg=9
+hi DiagnosticSignInfo guifg=lightblue guibg=NONE ctermfg=4 ctermbg=NONE
+hi DiagnosticSignWarn guifg=orange guibg=NONE ctermfg=3 ctermbg=NONE
+hi DiagnosticSignHint guibg=lightgrey guibg=NONE ctermfg=7 ctermbg=NONE
+hi DiagnosticSignError guifg=red guibg=NONE ctermfg=1 ctermbg=NONE
 
-hi DiagnosticsUnderlineInfo gui=none cterm=none 
-hi DiagnosticsUnderlineWarn gui=none cterm=none 
-hi DiagnosticsUnderlineHint gui=none cterm=none 
-hi DiagnosticsUnderlineError gui=none cterm=none 
+hi DiagnosticUnderlineInfo gui=NONE cterm=NONE 
+hi DiagnosticUnderlineWarn gui=NONE cterm=NONE 
+hi DiagnosticUnderlineHint gui=NONE cterm=NONE 
+hi DiagnosticUnderlineError gui=NONE cterm=NONE 
+
+hi NvimTreeWindowPicker ctermfg=7 ctermbg=6
+
+autocmd OptionSet termguicolors call ThemeUpdateCursorLine()
+
+function ThemeUpdateCursorLine() abort
+    echom v:option_new
+    if v:option_new == 1
+        hi CursorLine ctermfg=fg guifg=NONE 
+    else
+        hi CursorLine ctermfg=NONE guifg=fg 
+    endif
+endfunction

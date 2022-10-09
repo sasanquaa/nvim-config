@@ -33,6 +33,7 @@ require("packer").startup(function(use)
     use { 'neovim/nvim-lspconfig', event = "VimEnter", config = function()
         SourceFile("nvim-lspconfig.lua")
         SourceFile("nvim-lspconfig.vim")
+        SourceFile("nvim-lspconfig-lines.lua")
     end
     }
 
@@ -41,6 +42,7 @@ require("packer").startup(function(use)
     end
     }
     use { 'hrsh7th/cmp-nvim-lsp' }
+    use { 'hrsh7th/cmp-path' }
     use { 'L3MON4D3/LuaSnip' }
 
     use {
