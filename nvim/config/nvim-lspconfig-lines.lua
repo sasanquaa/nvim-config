@@ -15,7 +15,6 @@ local function lsp_lines_hide(namespace, bufnr)
 end
 
 local function lsp_lines_show(namespace, bufnr, diagnostics)
-
     lsp_lines_hide(namespace, bufnr)
 
     if #diagnostics == 0 then
@@ -34,9 +33,9 @@ local function lsp_lines_show(namespace, bufnr, diagnostics)
 
     local diagnostics_n = #diagnostics
     local virt_lines_by_lnum = {}
+    local virt_line_message_format = '─── %s'
 
     for i, diagnostic in ipairs(diagnostics) do
-
         local lnum = diagnostic.lnum
         local message = diagnostic.message
         local severity = diagnostic.severity
@@ -51,10 +50,9 @@ local function lsp_lines_show(namespace, bufnr, diagnostics)
 
         local virt_line_offset = string.rep(' ', col)
         local virt_line_continuation = same_col_peek and '├' or '└'
-        local virt_line_message = '─── ' .. message
-        local virt_line = { virt_line_offset .. virt_line_continuation .. virt_line_message,
+        local virt_line_message = string.format(virt_line_message_format, message)
+        local virt_line = { table.concat { virt_line_offset, virt_line_continuation, virt_line_message },
             highlight_groups[severity] }
-
         local virt_lines = virt_lines_by_lnum[lnum]
 
         if same_line and not same_col and #virt_lines > 0 then
@@ -62,9 +60,7 @@ local function lsp_lines_show(namespace, bufnr, diagnostics)
                 virt_lines[j][1] = string.replace_char(virt_line_prev[1], col + 1, '│')
             end
         end
-
         table.insert(virt_lines, virt_line)
-
     end
 
 
