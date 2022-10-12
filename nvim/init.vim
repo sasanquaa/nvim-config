@@ -1,6 +1,3 @@
-filetype on
-syntax off
-
 set noswapfile
 set nobackup
 set nowritebackup 
@@ -23,4 +20,3 @@ source ~/.config/nvim/lua/plugins.lua
 source ~/.config/nvim/config/terminal.vim
 
 autocmd FileType help,groovy,asm,ld,tsplayground setlocal syntax=ON
-autocmd WinEnter * source ~/.config/nvim/config/theme.vim
