@@ -9,18 +9,12 @@ hi! link TSKeywordOperator TSKeyword
 hi! link CmpItemKindClass TSClass
 hi! link CmpItemKindConstant TSConstant
 hi! link CmpItemKindConstructor TSConstructor
-" hi! link CmpItemKindField TSField
 hi! link CmpItemKindFunction TSFunction
 hi! link CmpItemKindMethod TSMethod
 hi! link CmpItemKindInterface TSClass
 hi! link CmpItemKindKeyword TSKeyword
 hi! link CmpItemKindText TSText
-" hi! link CmpItemKindVariable TSVariable
 
-" hi GitAddStripe guibg=#313335 ctermbg=236
-" hi GitChangeStripe guibg=#313335 ctermbg=236
-" hi GitDeleteStripe guibg=#313335 ctermbg=236
-"
 hi GitAddStripe guibg=NONE ctermbg=NONE
 hi GitChangeStripe guibg=NONE ctermbg=NONE
 hi GitDeleteStripe guibg=NONE ctermbg=NONE

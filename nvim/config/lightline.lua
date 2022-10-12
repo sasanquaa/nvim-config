@@ -1,7 +1,3 @@
-function string.starts(str, start)
-    return string.sub(str, 1, string.len(start)) == start
-end
-
 function LightlineFileName()
     local name = vim.fn.expand('%t')
     if string.starts(name, "jdt://") then

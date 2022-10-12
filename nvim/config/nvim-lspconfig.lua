@@ -1,16 +1,7 @@
-local lsp_util_open_floating_preview = vim.lsp.util.open_floating_preview
 local lsp_util_stylize_markdown = vim.lsp.util.stylize_markdown
-local lsp_signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 local lspconfig = require('lspconfig')
-local lsp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-lsp_capabilities.workspace.codeLens = { refreshSupport = true }
-
-function vim.lsp.util.open_floating_preview(contents, syntax, opts)
-    opts = opts or {}
-    -- opts.max_width = 60
-    -- opts.max_height = 20
-    return lsp_util_open_floating_preview(contents, syntax, opts)
-end
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 function vim.lsp.util.stylize_markdown(bufnr, contents, opts)
     vim.api.nvim_buf_set_option(bufnr, 'filetype', 'markdown')
@@ -54,11 +45,16 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
     underline = on_publish_diagnostics,
     signs = on_publish_diagnostics,
     update_in_insert = on_publish_diagnostics,
-    virtual_text = false,
-    -- virtual_lines = false
+    virtual_text = false
 })
 
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 lspconfig.jdtls.setup {
+    autostart= false,
     on_attach = function(client, bufnr)
         on_attach_common(client, bufnr)
         if client.config.init_options.extendedClientCapabilities.classFileContentsSupport then
@@ -88,35 +84,6 @@ lspconfig.jdtls.setup {
             end
         end
     end,
-    -- handlers = {
-    -- ['textDocument/codeLens'] = function(err, result, ctx, _)
-    -- if result then
-    --     for _, code_lens in ipairs(result) do
-    --         response = vim.lsp.buf_request(0, 'codeLens/resolve', code_lens)
-    --         if response then
-    --             code_lens = response[1].result
-    --             local _, pad = string.find(string.gsub(vim.fn.getline(code_lens.range.start.line + 1), '[\t]',
-    --                 string.rep(' ', vim.opt.tabstop._value)), '^%s*')
-    --             local opts = {
-    --                 virt_lines = { { { string.rep(' ', pad) .. code_lens.command.title, 'Comment' } } },
-    --                 virt_lines_above = true
-    --             }
-    --             vim.api.nvim_buf_set_extmark(0, ns, code_lens.range.start.line, 0, opts)
-    --         end
-    --     end
-    -- end
-    -- end,
-    -- ['workspace/codeLens/refresh'] = function(err, result, ctx, _)
-    -- local ns = vim.api.nvim_create_namespace('lsp_codelens')
-    -- local params = {
-    --     textDocument = { uri = 'file://' .. vim.fn.expand('%t') },
-    -- }
-    -- vim.lsp.buf_request(0, 'textDocument/codeLens', params)
-    -- end,
-    -- ['codeLens/resolve'] = function(err, result, ctx, _)
-
-    -- end
-    -- },
     init_options = {
         extendedClientCapabilities = {
             progressReportProvider = true,
@@ -135,12 +102,10 @@ lspconfig.jdtls.setup {
     settings = {
         java = {
             signatureHelp = { enabled = true },
-            contentProvider = { preferred = 'fernflower' },
-            implementationsCodeLens = { enabled = true },
-            referencesCodeLens = { enabled = true }
+            contentProvider = { preferred = 'fernflower' }
         }
     },
-    capabilities = lsp_capabilities
+    capabilities = capabilities
 }
 
 lspconfig.sumneko_lua.setup {
@@ -158,63 +123,24 @@ lspconfig.sumneko_lua.setup {
             }
         }
     },
-    capabilities = lsp_capabilities
+    capabilities = capabilities
 }
 
 lspconfig.vimls.setup {
     on_attach = on_attach_common,
-    capabilities = lsp_capabilities
+    capabilities = capabilities
 }
 
 lspconfig.ccls.setup {
     on_attach = on_attach_common,
-    capabilities = lsp_capabilities,
+    capabilities = capabilities,
     init_options = {
-        compilationDatabaseDirectory = "Build"
+        compilationDatabaseDirectory = "build"
     }
 }
 
 lspconfig.cmake.setup {
     init_options = {
-        buildDirectory = "Build"
+        buildDirectory = "build"
     }
 }
-
-for type, icon in pairs(lsp_signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
--- Someday to be used when nvim can inlay between characters (inline) or
--- conceal respects line wrap (anti-conceal)
-function LspInlayHint()
-    local ns = vim.api.nvim_create_namespace('lsp_inlayhints')
-    local line_first = vim.fn.line('w0')
-    local line_last = vim.fn.line('w$')
-    local cursor_last = vim.fn.col({ line_first, '$' })
-    local params = {
-        textDocument = { uri = 'file://' .. vim.fn.expand('%t') },
-        range = {
-            start = {
-                line = line_first - 1,
-                character = 0
-            },
-            ['end'] = {
-                line = line_last - 1,
-                character = cursor_last - 1
-            }
-        }
-    }
-    local response, _ = vim.lsp.buf_request_sync(0, 'textDocument/inlayHint', params)
-    if response then
-        local inlay_hints = response[1].result
-        for i, inlay_hint in ipairs(inlay_hints) do
-            local opts = {
-                id = i,
-                virt_text = { { inlay_hint.label, 'IncSearch' } },
-                virt_text_pos = 'overlay',
-            }
-            vim.api.nvim_buf_set_extmark(0, ns, inlay_hint.position.line, inlay_hint.position.character, opts)
-        end
-    end
-end

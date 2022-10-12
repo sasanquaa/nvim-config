@@ -3,8 +3,6 @@ syntax off
 
 set noswapfile
 set nobackup
-" set noautoident
-" set nosmartindent
 set nowritebackup 
 set noequalalways
 set showtabline=0
@@ -20,8 +18,9 @@ set expandtab
 set completeopt=menu,preview,noinsert
 set pumheight=12
 
+source ~/.config/nvim/config/string.lua
 source ~/.config/nvim/lua/plugins.lua
-source ~/.config/nvim/config/theme.vim
 source ~/.config/nvim/config/terminal.vim
 
 autocmd FileType help,groovy,asm,ld,tsplayground setlocal syntax=ON
+autocmd WinEnter * source ~/.config/nvim/config/theme.vim

@@ -1,10 +1,20 @@
-vim.g['loaded_netrwPlugin'] = 1
-
+local tree = require("nvim-tree")
+local tree_cb = require("nvim-tree.config").nvim_tree_callback
 local config = {
     view = {
         adaptive_size = true,
         hide_root_folder = true,
-        preserve_window_proportions = true
+        preserve_window_proportions = true,
+        mappings = {
+            list = {
+                { key = "<2-RightMouse>", action = "" },
+                { key = "<2-LeftMouse>", action = "" },
+                { key = "<C-x>", action = "" },
+                { key = "<C-v>", action = "" },
+                { key = "s", cb = tree_cb("vsplit") },
+                { key = "i", cb = tree_cb("split") },
+            }
+        }
     },
     renderer = {
         group_empty = true,
@@ -24,6 +34,8 @@ local config = {
     }
 }
 
+vim.g['loaded_netrwPlugin'] = 1
+
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
         if vim.fn.argc() <= 0 then
@@ -33,6 +45,8 @@ vim.api.nvim_create_autocmd("VimEnter", {
                     if getwinvar(i, '&filetype') == 'NvimTree'
                         call setwinvar(i, '&statusline', '%#StatusLine#')
                         call setwinvar(i, '&signcolumn', 'yes')
+                    else
+                        execute i .. "wincmd c"
                     endif
                 endfor
             ]]
@@ -40,4 +54,4 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
 })
 
-require("nvim-tree").setup(config)
+tree.setup(config)

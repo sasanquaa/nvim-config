@@ -6,16 +6,12 @@ local highlight_groups = {
     [vim.diagnostic.severity.HINT] = "DiagnosticVirtualTextHint",
 }
 
-function string.replace_char(str, pos, r)
-    return table.concat { str:sub(1, pos - 1), r, str:sub(pos + 1) }
-end
-
-local function lsp_lines_hide(namespace, bufnr)
+local function hide(namespace, bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
 end
 
-local function lsp_lines_show(namespace, bufnr, diagnostics)
-    lsp_lines_hide(namespace, bufnr)
+local function show(namespace, bufnr, diagnostics)
+    hide(namespace, bufnr)
 
     if #diagnostics == 0 then
         return
@@ -74,25 +70,25 @@ local function lsp_lines_show(namespace, bufnr, diagnostics)
 
 end
 
-local function lsp_lines_show_current_line(diagnostics, ns, bufnr)
+local function show_current_line(diagnostics, ns, bufnr)
     local current_line_diag = {}
     local lnum = vim.fn.line('.') - 1
     for _, diagnostic in pairs(diagnostics) do
         if lnum == diagnostic.lnum then table.insert(current_line_diag, diagnostic) end
     end
-    lsp_lines_show(ns, bufnr, current_line_diag)
+    show(ns, bufnr, current_line_diag)
 end
 
-local function lsp_lines_toggle()
+local function toggle()
     local new_value = not vim.diagnostic.config().virtual_lines
     vim.diagnostic.config({ virtual_lines = new_value })
     return new_value
 end
 
-local function lsp_lines_setup()
+local function setup()
     local group = "LspLines"
     vim.api.nvim_create_augroup(group, { clear = true })
-    vim.keymap.set('n', 'L', lsp_lines_toggle)
+    vim.keymap.set('n', 'L', toggle)
     vim.diagnostic.handlers.virtual_lines = {
         show = function(namespace, bufnr, diagnostics, _)
             local ns = vim.diagnostic.get_namespace(namespace)
@@ -104,18 +100,18 @@ local function lsp_lines_setup()
                 buffer = bufnr,
                 callback = function()
                     if vim.diagnostic.config().virtual_lines then
-                        lsp_lines_toggle()
+                        toggle()
                     end
                 end,
                 group = group,
                 once = true
             })
-            lsp_lines_show_current_line(diagnostics, ns.user_data.virt_lines_ns, bufnr)
+            show_current_line(diagnostics, ns.user_data.virt_lines_ns, bufnr)
         end,
         hide = function(namespace, bufnr)
             local ns = vim.diagnostic.get_namespace(namespace)
             if ns.user_data.virt_lines_ns then
-                lsp_lines_hide(ns.user_data.virt_lines_ns, bufnr)
+                hide(ns.user_data.virt_lines_ns, bufnr)
                 vim.api.nvim_clear_autocmds({ group = group })
             end
         end
@@ -123,4 +119,4 @@ local function lsp_lines_setup()
     vim.diagnostic.config({ virtual_lines = false })
 end
 
-lsp_lines_setup()
+setup()
