@@ -54,7 +54,7 @@ for type, icon in pairs(signs) do
 end
 
 lspconfig.jdtls.setup {
-    autostart= false,
+    autostart = false,
     on_attach = function(client, bufnr)
         on_attach_common(client, bufnr)
         if client.config.init_options.extendedClientCapabilities.classFileContentsSupport then
@@ -128,19 +128,25 @@ lspconfig.sumneko_lua.setup {
 
 lspconfig.vimls.setup {
     on_attach = on_attach_common,
-    capabilities = capabilities
+    capabilities = capabilities,
 }
 
 lspconfig.ccls.setup {
     on_attach = on_attach_common,
-    capabilities = capabilities,
     init_options = {
-        compilationDatabaseDirectory = "build"
-    }
+        completion = {
+            placeholder = false,
+            filterAndSort = false
+        },
+        index = {
+            multiVersion = 1,
+            multiVersionBlacklist = { "^/usr/include" }
+        }
+    },
+    capabilities = capabilities
 }
 
 lspconfig.cmake.setup {
-    init_options = {
-        buildDirectory = "build"
-    }
+    on_attach = on_attach_common,
+    capabilities = capabilities
 }

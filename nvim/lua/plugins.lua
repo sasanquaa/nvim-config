@@ -19,12 +19,6 @@ require('packer').startup(function(use)
 
     use { 'wbthomason/packer.nvim' }
 
-    use {
-        'windwp/nvim-autopairs',
-        config = function()
-            SourceFile('nvim-autopairs.lua')
-        end
-    }
     use { 'tpope/vim-commentary' }
     use { 'tpope/vim-surround' }
 
@@ -71,11 +65,25 @@ require('packer').startup(function(use)
             SourceFile('nvim-cmp.lua')
         end
     }
-
-    use { 'doums/darcula', after = { 'nvim-cmp', 'nvim-tree.lua', 'nvim-treesitter', 'gitsigns.nvim', 'lightline.vim' },
+    use {
+        'windwp/nvim-autopairs',
+        after = 'nvim-cmp',
         config = function()
-            SourceFile('theme.vim')
-        end }
+            SourceFile('nvim-autopairs.lua')
+        end
+    }
+
+    -- use { 'doums/darcula', after = {
+    --     'nvim-cmp', 'nvim-tree.lua', 'nvim-treesitter', 'gitsigns.nvim', 'lightline.vim'
+    -- }, config = function()
+    --         SourceFile('theme.vim')
+    --     end }
+
+    use { 'marko-cerovac/material.nvim', after = {
+        'nvim-cmp', 'nvim-tree.lua', 'nvim-treesitter', 'gitsigns.nvim', 'lightline.vim'
+    }, config = function()
+        SourceFile('theme.vim')
+    end }
 
     if packer_bootstrap then
         require('packer').sync()

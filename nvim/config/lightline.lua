@@ -19,7 +19,7 @@ function LightlineGitHead()
 end
 
 vim.g['lightline'] = {
-    colorscheme = 'darcula',
+    colorscheme = 'material',
     active = {
         right = {
             { 'githead', 'fileformat', 'fileencoding', 'filetype' },
