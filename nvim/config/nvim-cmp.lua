@@ -19,7 +19,7 @@ local icons = {
     Text = '',
     Unit = '',
     Value = '',
-    Variable = '',
+    Variable = ''
 }
 local luasnip = require('luasnip')
 local cmp = require('cmp')
@@ -41,17 +41,21 @@ cmp.setup {
     snippet = {
         expand = function(args)
             luasnip.lsp_expand(args.body)
-        end,
+        end
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-k>'] = cmp.mapping.scroll_docs(-2),
         ['<C-j>'] = cmp.mapping.scroll_docs(2),
-        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<C-p>'] = cmp.mapping.select_prev_item({
+            behavior = cmp.SelectBehavior.Select
+        }),
+        ['<C-n>'] = cmp.mapping.select_next_item({
+            behavior = cmp.SelectBehavior.Select
+        }),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<CR>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
+            select = true
         },
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -64,20 +68,22 @@ cmp.setup {
             else
                 fallback()
             end
-        end, { 'i', 's' }),
+        end, {'i', 's'}),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
             if luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
                 fallback()
             end
-        end, { 'i', 's' })
+        end, {'i', 's'})
     }),
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'path' }
-    },
+    sources = {{
+        name = 'nvim_lsp'
+    }, {
+        name = 'luasnip'
+    }, {
+        name = 'path'
+    }},
     performance = {
         debounce = 100
     },
@@ -86,7 +92,7 @@ cmp.setup {
     },
     formatting = {
         expandable_indicator = '',
-        fields = { 'kind', 'abbr' },
+        fields = {'kind', 'abbr'},
         format = function(_, vim_item)
             vim_item.abbr = string.gsub(vim_item.abbr, '~$', '')
             vim_item.kind = icons[vim_item.kind]

@@ -1,3 +1,4 @@
+set shellslash
 set noswapfile
 set nobackup
 set nowritebackup 
@@ -15,8 +16,9 @@ set expandtab
 set completeopt=menu,preview,noinsert
 set pumheight=12
 
-source ~/.config/nvim/config/string.lua
-source ~/.config/nvim/lua/plugins.lua
-source ~/.config/nvim/config/terminal.vim
+exec printf('source %s/%s', stdpath('config'), 'config/string.lua')
+exec printf('source %s/%s', stdpath('config'), 'config/terminal.vim')
+exec printf('source %s/%s', stdpath('config'), 'config/netrw.vim')
+exec printf('source %s/%s', stdpath('config'), 'lua/plugins.lua')
 
 autocmd FileType help,groovy,asm,ld,tsplayground setlocal syntax=ON

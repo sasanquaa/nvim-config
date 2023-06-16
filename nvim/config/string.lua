@@ -3,5 +3,5 @@ function string.starts(str, start)
 end
 
 function string.replace_char(str, pos, r)
-    return table.concat { str:sub(1, pos - 1), r, str:sub(pos + 1) }
+    return table.concat {str:sub(1, pos - 1), r, str:sub(pos + 1)}
 end
