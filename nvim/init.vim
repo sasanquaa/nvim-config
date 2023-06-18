@@ -19,6 +19,6 @@ set pumheight=12
 exec printf('source %s/%s', stdpath('config'), 'config/string.lua')
 exec printf('source %s/%s', stdpath('config'), 'config/terminal.vim')
 exec printf('source %s/%s', stdpath('config'), 'config/netrw.vim')
-exec printf('source %s/%s', stdpath('config'), 'lua/plugins.lua')
+exec printf('source %s/%s', stdpath('config'), 'config/plugins.lua')
 
 autocmd FileType help,groovy,asm,ld,tsplayground setlocal syntax=ON
