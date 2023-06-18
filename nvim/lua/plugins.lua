@@ -19,6 +19,7 @@ require('packer').startup(function(use)
 
     use {'wbthomason/packer.nvim'}
 
+    use {'tpope/vim-vinegar'}
     use {'tpope/vim-commentary'}
     use {'tpope/vim-surround'}
 
