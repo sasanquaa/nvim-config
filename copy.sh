@@ -1,0 +1,1 @@
+copy -r ./nvim/ ~/.config/
