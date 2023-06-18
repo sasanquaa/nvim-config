@@ -1,6 +1,6 @@
 local config = {
     ensure_installed = {"bash", "markdown", "markdown_inline", "json", "c", "cpp", "cmake", "lua", "vim", "haskell",
-                        "rust"},
+                        "rust", "python"},
     highlight = {
         enabled = true,
         additional_vim_regex_highlighting = false

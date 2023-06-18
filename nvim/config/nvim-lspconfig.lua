@@ -84,3 +84,5 @@ lspconfig.vimls.setup {
     on_attach = on_attach_common,
     capabilities = capabilities
 }
+
+lspconfig.pyright.setup{}
