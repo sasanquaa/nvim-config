@@ -1,4 +1,3 @@
-set shellslash
 set noswapfile
 set nobackup
 set nowritebackup 
