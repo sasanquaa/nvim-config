@@ -23,6 +23,11 @@ require('packer').startup(function(use)
     use {'tpope/vim-commentary'}
     use {'tpope/vim-surround'}
 
+    use {
+        'junegunn/fzf.vim',
+        requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+     }
+
     use {'haya14busa/incsearch.vim'}
     use {'haya14busa/incsearch-easymotion.vim'}
     use {'haya14busa/incsearch-fuzzy.vim'}
