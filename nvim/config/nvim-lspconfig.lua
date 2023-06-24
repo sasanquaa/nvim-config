@@ -86,3 +86,10 @@ lspconfig.vimls.setup {
 }
 
 lspconfig.pyright.setup{}
+
+lspconfig.tsserver.setup{}
+
+lspconfig.svelte.setup{}
+
+lspconfig.rust_analyzer.setup{}
+
