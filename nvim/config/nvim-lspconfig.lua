@@ -91,5 +91,11 @@ lspconfig.tsserver.setup{}
 
 lspconfig.svelte.setup{}
 
-lspconfig.rust_analyzer.setup{}
+lspconfig.rust_analyzer.setup{
+    diagnostics = {
+        experimental = {
+            enable = true
+        }
+    }
+}
 
