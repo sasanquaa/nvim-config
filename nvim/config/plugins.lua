@@ -26,7 +26,10 @@ require('packer').startup(function(use)
         tag = '0.1.2',
         requires = {
             { 'nvim-lua/plenary.nvim' }
-        }
+        },
+        config = function()
+            SourceFile('telescope.vim')
+        end
     }
 
     use { 'haya14busa/incsearch.vim' }
