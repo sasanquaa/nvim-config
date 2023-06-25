@@ -1,4 +1,5 @@
 let s:lsp_use_telescope = luaeval('packer_plugins["telescope.nvim"].loaded')
+let s:lsp_inlay_hints = ['rust']
 
 if s:lsp_use_telescope
     nmap <silent> gd :Telescope lsp_definitions<CR>
@@ -21,6 +22,7 @@ xmap <silent> <Leader>fs :lua vim.lsp.buf.range_formatting()<CR>
 
 autocmd User EasyMotionPromptBegin call LspDiagnosticsDisable()
 autocmd User EasyMotionPromptEnd call LspDiagnosticsEnable()
+autocmd BufEnter * call LspInlayHintEnable()
 
 function! LspDiagnosticsEnable() abort
     function! Enabler() abort
@@ -35,4 +37,10 @@ function! LspDiagnosticsDisable() abort
         call timer_stop(b:lsp_diagnostics_timer_id)
     endif
     let b:lsp_diagnostics_enabled = v:false
+endfunction
+
+function! LspInlayHintEnable() abort
+    if index(s:lsp_inlay_hints, &filetype) >= 0
+        lua vim.lsp.buf.inlay_hint(0, true) 
+    endif
 endfunction

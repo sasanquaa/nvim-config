@@ -25,7 +25,7 @@ local function on_attach_common(client, bufnr)
             group = group,
             buffer = bufnr
         })
-        vim.api.nvim_create_autocmd({'CursorHold', 'CursorHoldI'}, {
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             group = group,
             buffer = bufnr,
             callback = vim.lsp.buf.document_highlight
@@ -67,7 +67,7 @@ lspconfig.lua_ls.setup {
     settings = {
         Lua = {
             diagnostics = {
-                globals = {'vim'}
+                globals = { 'vim' }
             },
             runtime = {
                 version = 'LuaJIT'
@@ -85,17 +85,16 @@ lspconfig.vimls.setup {
     capabilities = capabilities
 }
 
-lspconfig.pyright.setup{}
+lspconfig.pyright.setup {}
 
-lspconfig.tsserver.setup{}
+lspconfig.tsserver.setup {}
 
-lspconfig.svelte.setup{}
+lspconfig.svelte.setup {}
 
-lspconfig.rust_analyzer.setup{
+lspconfig.rust_analyzer.setup {
     diagnostics = {
         experimental = {
             enable = true
         }
     }
 }
-
