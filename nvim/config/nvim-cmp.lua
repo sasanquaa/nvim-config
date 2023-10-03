@@ -68,22 +68,22 @@ cmp.setup {
             else
                 fallback()
             end
-        end, {'i', 's'}),
+        end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
             if luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
                 fallback()
             end
-        end, {'i', 's'})
+        end, { 'i', 's' })
     }),
-    sources = {{
+    sources = { {
         name = 'nvim_lsp'
     }, {
         name = 'luasnip'
     }, {
         name = 'path'
-    }},
+    } },
     performance = {
         debounce = 100
     },
@@ -92,7 +92,7 @@ cmp.setup {
     },
     formatting = {
         expandable_indicator = '',
-        fields = {'kind', 'abbr'},
+        fields = { 'kind', 'abbr' },
         format = function(_, vim_item)
             vim_item.abbr = string.gsub(vim_item.abbr, '~$', '')
             vim_item.kind = icons[vim_item.kind]

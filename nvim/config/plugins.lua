@@ -57,9 +57,14 @@ require('packer').startup(function(use)
     }
 
     use {
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim'
+    }
+    use {
         'neovim/nvim-lspconfig',
         event = 'VimEnter',
         config = function()
+            SourceFile('mason.lua')
             SourceFile('nvim-lspconfig.lua')
             SourceFile('nvim-lspconfig.vim')
             SourceFile('nvim-lspconfig-lines.lua')

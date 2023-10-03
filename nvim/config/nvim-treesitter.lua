@@ -1,6 +1,6 @@
 local config = {
-    ensure_installed = {"bash", "markdown", "markdown_inline", "json", "c", "cpp", "cmake", "lua", "vim", "haskell",
-                        "rust", "python", "typescript", "svelte"},
+    ensure_installed = {"bash", "markdown", "markdown_inline", "json", "c", "cpp", "cmake", "lua", "vim",
+                        "rust", "python", "typescript", "svelte", "glsl"},
     highlight = {
         enabled = true,
         additional_vim_regex_highlighting = false

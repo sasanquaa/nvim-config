@@ -98,3 +98,5 @@ lspconfig.rust_analyzer.setup {
         }
     }
 }
+
+lspconfig.glslls.setup {}
