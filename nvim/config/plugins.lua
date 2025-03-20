@@ -17,6 +17,7 @@ end
 
 require('packer').startup(function(use)
     use { 'wbthomason/packer.nvim' }
+    use { 'RRethy/vim-illuminate' }
     use {
         "aznhe21/actions-preview.nvim",
         config = function()
