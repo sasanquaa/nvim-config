@@ -17,6 +17,17 @@ end
 
 require('packer').startup(function(use)
     use { 'wbthomason/packer.nvim' }
+    use { 'RRethy/vim-illuminate' }
+    use { "chrisgrieser/nvim-various-textobjs", config = function()
+        require("various-textobjs").setup {
+            keymaps = {
+                useDefaults = false
+            }
+        }
+        vim.keymap.set({ "o", "x" }, "aw", '<cmd>lua require("various-textobjs").subword("outer")<CR>')
+        vim.keymap.set({ "o", "x" }, "iw", '<cmd>lua require("various-textobjs").subword("inner")<CR>')
+    end }
+    use { 'dstein64/nvim-scrollview' }
     use {
         "aznhe21/actions-preview.nvim",
         config = function()
@@ -24,7 +35,10 @@ require('packer').startup(function(use)
         end,
     }
     use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-        require("toggleterm").setup()
+        require("toggleterm").setup {
+            shell = "pwsh.exe",
+            auto_scroll = false,
+        }
         function _G.set_terminal_keymaps()
             local opts = { buffer = 0 }
             vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)

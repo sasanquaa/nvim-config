@@ -1,34 +1,37 @@
--- local cmp_rust_source = {}
-
--- function cmp_rust_source:get_trigger_characters()
---     return { '.' }
--- end
-
--- function cmp_rust_source:complete(params, callback)
---     if params == nil then
---         return
---     end
---     callback({
---         { label = "ok", kind = vim.lsp.protocol.CompletionItemKind.Snippet },
---         -- { label = "some", kind = vim.lsp.protocol.CompletionItemKind.Snippet },
---         -- { label = "err",  kind = vim.lsp.protocol.CompletionItemKind.Snippet },
---     })
--- end
-
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
+local function truncate_text(text, min_width, max_width)
+    if string.len(text) > max_width then
+        return vim.fn.strcharpart(text, 0, max_width)
+    elseif string.len(text) < min_width then
+        return text .. string.rep(' ', min_width - string.len(text))
+    else
+        return text
+    end
+end
+
 require("nvim-autopairs").setup {}
--- cmp.register_source('rust', cmp_rust_source)
 cmp.setup {
+    formatting = {
+        format = function(_, vim_item)
+            if vim_item.menu ~= nil then
+                vim_item.menu = truncate_text(vim_item.menu, 35, 35)
+            end
+            if vim_item.abbr ~= nil then
+                vim_item.abbr = truncate_text(vim_item.abbr, 25, 25)
+            end
+            return vim_item
+        end
+    },
     snippet = {
         expand = function(args)
             vim.snippet.expand(args.body)
         end
     },
     window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
+        -- completion = cmp.config.window.bordered(),
+        -- documentation = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-k>'] = cmp.mapping.scroll_docs(-2),
@@ -51,7 +54,7 @@ cmp.setup {
     }),
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-    }, { { name = 'rust' } }, {
+    }, {
         { name = 'buffer' },
     })
 }
@@ -59,7 +62,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 require('mason').setup()
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "vimls", "rust_analyzer" },
+    ensure_installed = { "lua_ls", "vimls", "rust_analyzer", "taplo" },
     automatic_installation = true
 }
 
@@ -68,6 +71,8 @@ local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 lsp_format.setup {}
+
+lspconfig.taplo.setup {}
 
 lspconfig.zls.setup {}
 
@@ -115,8 +120,12 @@ lspconfig.pyright.setup {
 
 lspconfig.rust_analyzer.setup {
     on_attach = lsp_format.on_attach,
-    diagnostics = {
-        enable = false
+    settings = {
+        ['rust-analyzer'] = {
+            diagnostics = {
+                enable = false
+            },
+        }
     },
     capabilities = capabilities
 }
