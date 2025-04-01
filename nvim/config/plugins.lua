@@ -17,6 +17,10 @@ end
 
 require('packer').startup(function(use)
     use { 'wbthomason/packer.nvim' }
+    use {
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    }
     use { 'RRethy/vim-illuminate' }
     use { "chrisgrieser/nvim-various-textobjs", config = function()
         require("various-textobjs").setup {
@@ -32,6 +36,7 @@ require('packer').startup(function(use)
         "aznhe21/actions-preview.nvim",
         config = function()
             vim.keymap.set({ "v", "n" }, "<Leader>ca", require("actions-preview").code_actions)
+            vim.keymap.set({ "n" }, "<Leader>cb", "<S-g><S-v>gg")
         end,
     }
     use { "akinsho/toggleterm.nvim", tag = '*', config = function()
