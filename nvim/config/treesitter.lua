@@ -7,6 +7,7 @@ local config = {
         "lua",
         "vim",
         "rust",
+        "zig",
         "python",
         "toml"
     },

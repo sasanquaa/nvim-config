@@ -3,6 +3,7 @@ set nobackup
 set nowritebackup 
 set noequalalways
 set showtabline=0
+set colorcolumn=100
 set number 
 set cursorline 
 set updatetime=100

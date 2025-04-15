@@ -74,7 +74,10 @@ lsp_format.setup {}
 
 lspconfig.taplo.setup {}
 
-lspconfig.zls.setup {}
+lspconfig.zls.setup {
+    on_attach = lsp_format.on_attach,
+    capabilities = capabilities
+}
 
 lspconfig.lua_ls.setup {
     on_attach = lsp_format.on_attach,
@@ -125,6 +128,9 @@ lspconfig.rust_analyzer.setup {
             diagnostics = {
                 enable = false
             },
+            check = {
+                command = "clippy"
+            }
         }
     },
     capabilities = capabilities
