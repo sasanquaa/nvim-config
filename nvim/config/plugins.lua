@@ -76,6 +76,11 @@ require('packer').startup(function(use)
             { 'nvim-lua/plenary.nvim' }
         },
         config = function()
+            require('telescope').setup {
+                defaults = {
+                    file_ignore_patterns = { "node_modules", "target", "Cargo.lock" }
+                }
+            }
             SourceFile('telescope.vim')
         end
     }

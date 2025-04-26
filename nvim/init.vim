@@ -16,6 +16,8 @@ set expandtab
 set completeopt=menu,preview,noinsert
 set pumheight=12
 
+nnoremap <Leader>fe :Explore<CR>
+
 exec printf('source %s/%s', stdpath('config'), 'config/plugins.lua')
 
 autocmd FileType help setlocal syntax=ON

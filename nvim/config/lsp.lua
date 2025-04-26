@@ -62,7 +62,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 require('mason').setup()
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "vimls", "rust_analyzer", "taplo" },
+    ensure_installed = { "lua_ls", "vimls", "zls", "pyright", "rust_analyzer", "taplo" },
     automatic_installation = true
 }
 
@@ -112,6 +112,11 @@ lspconfig.lua_ls.setup {
     capabilities = capabilities
 }
 
+-- lspconfig.pbls.setup {
+--     on_attach = lsp_format.on_attach,
+--     capabilities = capabilities
+-- }
+
 lspconfig.vimls.setup {
     on_attach = lsp_format.on_attach,
     capabilities = capabilities
@@ -119,6 +124,7 @@ lspconfig.vimls.setup {
 
 lspconfig.pyright.setup {
     on_attach = lsp_format.on_attach,
+    capabilities = capabilities
 }
 
 lspconfig.rust_analyzer.setup {
