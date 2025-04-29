@@ -62,29 +62,22 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 require('mason').setup()
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "vimls", "zls", "pyright", "rust_analyzer", "taplo" },
+    ensure_installed = { "lua_ls", "vimls", "zls", "pylsp", "rust_analyzer", "taplo" },
     automatic_installation = true
 }
 
 local lsp_format = require('lsp-format')
-local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 lsp_format.setup {}
 
-lspconfig.taplo.setup {}
-
-lspconfig.zls.setup {
-    on_attach = lsp_format.on_attach,
-    capabilities = capabilities
-}
-
-lspconfig.lua_ls.setup {
+vim.lsp.enable({ 'taplo', 'lua_ls', 'zls', 'vimls', 'pylsp', 'rust_analyzer' })
+vim.lsp.config('lua_ls', {
     on_attach = lsp_format.on_attach,
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+            if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
                 return
             end
         end
@@ -109,25 +102,26 @@ lspconfig.lua_ls.setup {
     settings = {
         Lua = {}
     },
-    capabilities = capabilities
-}
-
--- lspconfig.pbls.setup {
---     on_attach = lsp_format.on_attach,
---     capabilities = capabilities
--- }
-
-lspconfig.vimls.setup {
+    capabilities = capabilities,
+})
+vim.lsp.config('vimls', {
     on_attach = lsp_format.on_attach,
     capabilities = capabilities
-}
-
-lspconfig.pyright.setup {
+})
+vim.lsp.config('pylsp', {
     on_attach = lsp_format.on_attach,
-    capabilities = capabilities
-}
-
-lspconfig.rust_analyzer.setup {
+    capabilities = capabilities,
+    settings = {
+        pylsp = {
+            plugins = {
+                black = {
+                    enabled = true
+                }
+            }
+        }
+    }
+})
+vim.lsp.config('rust_analyzer', {
     on_attach = lsp_format.on_attach,
     settings = {
         ['rust-analyzer'] = {
@@ -140,4 +134,4 @@ lspconfig.rust_analyzer.setup {
         }
     },
     capabilities = capabilities
-}
+})
