@@ -1,3 +1,28 @@
+vim.keymap.set("n", "<Leader>rn", function()
+    local cmdId
+    cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+        callback = function()
+            local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
+            vim.api.nvim_feedkeys(key, "c", false)
+            vim.api.nvim_feedkeys("0", "n", false)
+            cmdId = nil
+            return true
+        end,
+    })
+    vim.lsp.buf.rename()
+    vim.defer_fn(function()
+        if cmdId then
+            vim.api.nvim_del_autocmd(cmdId)
+        end
+    end, 500)
+end)
+
+vim.api.nvim_create_autocmd({ "CmdwinEnter" }, {
+    callback = function()
+        vim.keymap.set("n", "<esc>", ":quit<CR>", { buffer = true })
+    end,
+})
+
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
@@ -115,7 +140,8 @@ vim.lsp.config('pylsp', {
         pylsp = {
             plugins = {
                 black = {
-                    enabled = true
+                    enabled = true,
+                    line_length = 100
                 }
             }
         }
