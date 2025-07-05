@@ -87,7 +87,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 require('mason').setup()
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "vimls", "zls", "pylsp", "rust_analyzer", "taplo" },
+    ensure_installed = { "lua_ls", "vimls", "zls", "pylsp", "rust_analyzer", "taplo", "cmake", "clangd", "arduino_language_server" },
     automatic_installation = true
 }
 
@@ -96,7 +96,8 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 
 lsp_format.setup {}
 
-vim.lsp.enable({ 'taplo', 'lua_ls', 'zls', 'vimls', 'pylsp', 'rust_analyzer' })
+vim.lsp.enable({ 'taplo', 'lua_ls', 'zls', 'vimls', 'pylsp', 'rust_analyzer', 'cmake', 'clangd',
+    'arduino_language_server' })
 vim.lsp.config('lua_ls', {
     on_attach = lsp_format.on_attach,
     on_init = function(client)
@@ -128,6 +129,11 @@ vim.lsp.config('lua_ls', {
         Lua = {}
     },
     capabilities = capabilities,
+})
+vim.lsp.config('arduino_language_server', {
+    on_attach = lsp_format.on_attach,
+    capabilities = capabilities,
+    cmd = { "arduino-language-server", "-cli", "arduino-cli", "-cli-config", vim.env.ARDUINO_LSP_CLI_CONFIG, "-fqbn", vim.env.ARDUINO_LSP_FQBN, "-clangd", "clangd", }
 })
 vim.lsp.config('vimls', {
     on_attach = lsp_format.on_attach,

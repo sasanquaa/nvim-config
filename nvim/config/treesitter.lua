@@ -9,7 +9,8 @@ local config = {
         "rust",
         "zig",
         "python",
-        "toml"
+        "toml",
+        "arduino"
     },
     highlight = {
         enabled = true,
