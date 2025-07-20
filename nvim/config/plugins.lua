@@ -71,7 +71,7 @@ require('packer').startup(function(use)
     use { 'tpope/vim-commentary' }
     use { 'tpope/vim-surround' }
     use { 'nvim-telescope/telescope.nvim',
-        tag = '0.1.8',
+        tag = 'master',
         requires = {
             { 'nvim-lua/plenary.nvim' }
         },

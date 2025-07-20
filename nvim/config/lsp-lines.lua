@@ -27,6 +27,60 @@ local highlight_groups = {
     [vim.diagnostic.severity.HINT] = "DiagnosticVirtualTextHint"
 }
 
+--- Generated AI slop.
+---
+--- @param text string
+--- @param start_col integer
+--- @param win_width integer
+--- @return string[]
+local function wrap_text_from_col(text, start_col, win_width)
+    local max_width = win_width - start_col
+    if max_width <= 0 then
+        return { text } -- no wrapping possible
+    end
+
+    local lines = {}
+    local current_line = ""
+
+    local words = {}
+    for word in text:gmatch("%S+") do
+        table.insert(words, word)
+    end
+
+    local i = 1
+    while i <= #words do
+        local word = words[i]
+
+        if current_line == "" then
+            current_line = word
+            i = i + 1
+        else
+            local trial_line = current_line .. " " .. word
+            local trial_width
+            if i + 1 <= #words then
+                trial_width = vim.fn.strdisplaywidth(trial_line .. " " .. words[i + 1]) + start_col
+            else
+                trial_width = vim.fn.strdisplaywidth(trial_line) + start_col
+            end
+
+            if trial_width > win_width then
+                table.insert(lines, current_line)
+                current_line = ""
+            else
+                current_line = trial_line
+                i = i + 1
+            end
+        end
+    end
+
+    if current_line ~= "" then
+        table.insert(lines, current_line)
+    end
+
+    return lines
+end
+
+
 local function hide(namespace, bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
 end
@@ -50,6 +104,8 @@ local function show(namespace, bufnr, diagnostics)
 
     local virt_lines_by_lnum = {} -- map of line number -> list of tuples of [message, severitiy]
     local virt_line_message_format = '─── %s'
+    -- 6 because I always see 6 chars less but this API gives 6 chars more
+    local win_width = vim.api.nvim_win_get_width(0) - 6
 
     for i, diagnostic in ipairs(diagnostics) do
         local lnum = diagnostic.lnum
@@ -61,9 +117,16 @@ local function show(namespace, bufnr, diagnostics)
             col -- peek if the next diagnostic is also in the same line and column
 
         local virt_lines = virt_lines_by_lnum[lnum] or {}
-        local virt_lines_length = #virt_lines                  -- old length before table.insert
-        local virt_line_messages = string.split(message, '\n') -- split message by newline
+        local virt_lines_length = #virt_lines -- old length before table.insert
+        local virt_line_messages = {}
         local virt_line_offset = string.rep(' ', col)
+
+        for _, line in ipairs(string.split(message, '\n')) do
+            local wrapped_lines = wrap_text_from_col(line, col, win_width)
+            for _, wrap_line in ipairs(wrapped_lines) do
+                table.insert(virt_line_messages, wrap_line)
+            end
+        end
 
         for j, msg in ipairs(virt_line_messages) do
             local virt_line_continuation = j == #virt_line_messages and (same_col_peek and '├' or '└') or '├'

@@ -23,6 +23,8 @@ vim.api.nvim_create_autocmd({ "CmdwinEnter" }, {
     end,
 })
 
+vim.highlight.priorities.semantic_tokens = 95
+
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 

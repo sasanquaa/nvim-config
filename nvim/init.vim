@@ -17,6 +17,8 @@ set completeopt=menu,preview,noinsert
 set pumheight=12
 
 nnoremap <Leader>fe :Explore<CR>
+nnoremap <silent> u u`.
+nnoremap <silent> <C-r> <C-r>`.
 
 exec printf('source %s/%s', stdpath('config'), 'config/plugins.lua')
 
