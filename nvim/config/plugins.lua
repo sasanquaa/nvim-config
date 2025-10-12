@@ -1,139 +1,157 @@
-local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-        vim.cmd [[packadd packer.nvim]]
-        return true
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out,                            "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
     end
-    return false
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_bootstrap = ensure_packer()
-
-function SourceFile(name)
+local function source_file(name)
     vim.cmd('source ' .. vim.fn.stdpath('config') .. '/' .. 'config' .. '/' .. name)
 end
 
-require('packer').startup(function(use)
-    use { 'wbthomason/packer.nvim' }
-    use {
+require("lazy").setup({
+    {
         "iamcco/markdown-preview.nvim",
-        run = function() vim.fn["mkdp#util#install"]() end,
-    }
-    use { 'RRethy/vim-illuminate' }
-    use { "chrisgrieser/nvim-various-textobjs", config = function()
-        require("various-textobjs").setup {
-            keymaps = {
-                useDefaults = false
-            }
-        }
-        vim.keymap.set({ "o", "x" }, "aw", '<cmd>lua require("various-textobjs").subword("outer")<CR>')
-        vim.keymap.set({ "o", "x" }, "iw", '<cmd>lua require("various-textobjs").subword("inner")<CR>')
-    end }
-    use { 'dstein64/nvim-scrollview' }
-    use {
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    },
+
+    { "RRethy/vim-illuminate" },
+
+    {
+        "chrisgrieser/nvim-various-textobjs",
+        config = function()
+            require("various-textobjs").setup({ keymaps = { useDefaults = false } })
+            vim.keymap.set({ "o", "x" }, "aw", '<cmd>lua require("various-textobjs").subword("outer")<CR>')
+            vim.keymap.set({ "o", "x" }, "iw", '<cmd>lua require("various-textobjs").subword("inner")<CR>')
+        end,
+    },
+
+    { "dstein64/nvim-scrollview" },
+
+    {
         "aznhe21/actions-preview.nvim",
         config = function()
             vim.keymap.set({ "v", "n" }, "<Leader>a", require("actions-preview").code_actions)
-            vim.keymap.set({ "n" }, "%", "<S-g><S-v>gg")
+            vim.keymap.set("n", "%", "<S-g><S-v>gg")
         end,
-    }
-    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-        require("toggleterm").setup {
-            shell = "pwsh.exe",
-            auto_scroll = false,
-        }
-        function _G.set_terminal_keymaps()
-            local opts = { buffer = 0 }
-            vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
-            vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
-            vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
-            vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
-            vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
-            vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
-        end
+    },
 
-        vim.keymap.set({ "n" }, "<Leader>tt", "<cmd>ToggleTerm<CR>")
-        vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-    end }
-    use { 'chrisgrieser/nvim-spider', config = function()
-        require('spider').setup {
-            skipInsignificantPunctuation = false
-        }
-        vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>")
-        vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>")
-        vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>")
-        vim.keymap.set("n", "cw", "c<cmd>lua require('spider').motion('e')<CR>")
-        vim.keymap.set("i", "<C-w>", "<Esc>cvb", { remap = true })
-    end }
-    use { 'tpope/vim-vinegar' }
-    use { 'tpope/vim-commentary' }
-    use { 'tpope/vim-surround' }
-    use { 'nvim-telescope/telescope.nvim',
-        tag = 'master',
-        requires = {
-            { 'nvim-lua/plenary.nvim' }
-        },
+    {
+        "akinsho/toggleterm.nvim",
+        version = "*",
         config = function()
-            require('telescope').setup {
-                defaults = {
-                    file_ignore_patterns = { "node_modules", "target", "Cargo.lock" }
-                }
-            }
-            SourceFile('telescope.lua')
-        end
-    }
-    use({
+            require("toggleterm").setup({ shell = "pwsh.exe", auto_scroll = false })
+
+            function _G.set_terminal_keymaps()
+                local opts = { buffer = 0 }
+                vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+                vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+                vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+                vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+                vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+                vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+            end
+
+            vim.keymap.set("n", "<Leader>tt", "<cmd>ToggleTerm<CR>")
+            vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+        end,
+    },
+
+    {
+        "chrisgrieser/nvim-spider",
+        config = function()
+            require('spider').setup({ skipInsignificantPunctuation = false })
+            vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>")
+            vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>")
+            vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>")
+            vim.keymap.set("n", "cw", "c<cmd>lua require('spider').motion('e')<CR>")
+            vim.keymap.set("i", "<C-w>", "<Esc>cvb", { remap = true })
+        end,
+    },
+
+    { "tpope/vim-vinegar" },
+    { "tpope/vim-commentary" },
+    { "tpope/vim-surround" },
+
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("telescope").setup({
+                defaults = { file_ignore_patterns = { "node_modules", "target", "Cargo.lock" } },
+            })
+            source_file("telescope.lua")
+        end,
+    },
+
+    {
         "ramojus/mellifluous.nvim",
         config = function()
             vim.cmd("colorscheme mellifluous")
         end,
-    })
-    use {
-        'haya14busa/incsearch.vim',
-        'haya14busa/incsearch-easymotion.vim',
-        'haya14busa/incsearch-fuzzy.vim',
-        { 'easymotion/vim-easymotion',
-            config = function()
-                SourceFile('motion.lua')
-            end
-        }
+    },
 
-    }
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = function()
-            require('nvim-treesitter.install').update({
-                with_sync = true
-            })
-        end,
-        config = function()
-            SourceFile('treesitter.lua')
-        end
-    }
-    use {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        after = "nvim-treesitter",
-        requires = "nvim-treesitter/nvim-treesitter",
-    }
-    use {
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-path',
-        'hrsh7th/nvim-cmp',
-        'windwp/nvim-autopairs',
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim',
-        'lukas-reineke/lsp-format.nvim',
-        { 'neovim/nvim-lspconfig',
-            after = "nvim-treesitter",
-            config = function()
-                SourceFile('lsp.lua')
-                SourceFile('lsp-lines.lua')
-            end
+    {
+        "haya14busa/incsearch.vim",
+        dependencies = {
+            "haya14busa/incsearch-easymotion.vim",
+            "haya14busa/incsearch-fuzzy.vim",
+            {
+                "easymotion/vim-easymotion",
+                config = function()
+                    source_file("motion.lua")
+                end,
+            },
         },
-    }
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
+    },
+
+    {
+        "nvim-treesitter/nvim-treesitter",
+        branch = "master",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            source_file("treesitter.lua")
+        end,
+    },
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+    },
+
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {},
+    },
+
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "hrsh7th/nvim-cmp",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-nvim-lsp",
+            "windwp/nvim-autopairs",
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "lukas-reineke/lsp-format.nvim",
+        },
+        config = function()
+            source_file("lsp.lua")
+            source_file("lsp-lines.lua")
+        end,
+    },
+})
