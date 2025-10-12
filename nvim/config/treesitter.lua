@@ -1,3 +1,14 @@
+local function ts_on_enter()
+    vim.cmd('TSEnable highlight')
+    vim.cmd('TSEnable indent')
+end
+
+vim.api.nvim_create_autocmd('VimEnter', {
+    callback = ts_on_enter,
+    desc = 'Enable Treesitter highlight and indent on startup',
+})
+
+
 local config = {
     ensure_installed = {
         "bash",

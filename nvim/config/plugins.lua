@@ -35,8 +35,8 @@ require('packer').startup(function(use)
     use {
         "aznhe21/actions-preview.nvim",
         config = function()
-            vim.keymap.set({ "v", "n" }, "<Leader>ca", require("actions-preview").code_actions)
-            vim.keymap.set({ "n" }, "<Leader>cb", "<S-g><S-v>gg")
+            vim.keymap.set({ "v", "n" }, "<Leader>a", require("actions-preview").code_actions)
+            vim.keymap.set({ "n" }, "%", "<S-g><S-v>gg")
         end,
     }
     use { "akinsho/toggleterm.nvim", tag = '*', config = function()
@@ -81,7 +81,7 @@ require('packer').startup(function(use)
                     file_ignore_patterns = { "node_modules", "target", "Cargo.lock" }
                 }
             }
-            SourceFile('telescope.vim')
+            SourceFile('telescope.lua')
         end
     }
     use({
@@ -96,7 +96,7 @@ require('packer').startup(function(use)
         'haya14busa/incsearch-fuzzy.vim',
         { 'easymotion/vim-easymotion',
             config = function()
-                SourceFile('motion.vim')
+                SourceFile('motion.lua')
             end
         }
 
@@ -110,7 +110,6 @@ require('packer').startup(function(use)
         end,
         config = function()
             SourceFile('treesitter.lua')
-            SourceFile('treesitter.vim')
         end
     }
     use {
@@ -130,7 +129,6 @@ require('packer').startup(function(use)
             after = "nvim-treesitter",
             config = function()
                 SourceFile('lsp.lua')
-                SourceFile('lsp.vim')
                 SourceFile('lsp-lines.lua')
             end
         },

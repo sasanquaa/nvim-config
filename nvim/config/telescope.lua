@@ -1,0 +1,15 @@
+local ts = require('telescope.builtin')
+
+vim.keymap.set('n', 'gd', ts.lsp_definitions, { silent = true })
+vim.keymap.set('n', 'gt', ts.lsp_type_definitions, { silent = true })
+vim.keymap.set('n', 'gi', ts.lsp_implementations, { silent = true })
+vim.keymap.set('n', 'gr', ts.lsp_references, { silent = true })
+
+vim.keymap.set('n', '<Leader>f', ts.find_files, { silent = true, noremap = true })
+vim.keymap.set('n', '<Leader>/', ts.live_grep, { silent = true, noremap = true })
+vim.keymap.set('n', '<Leader>b', ts.buffers, { silent = true, noremap = true })
+vim.keymap.set('n', '<Leader>z', ts.current_buffer_fuzzy_find, { silent = true, noremap = true })
+-- vim.keymap.set('n', '<Leader>?', ts.keymaps, { silent = true, noremap = true })
+vim.keymap.set('n', '<Leader>s', ts.lsp_document_symbols, { silent = true, noremap = true })
+-- vim.keymap.set('n', '<Leader>d', ts.diagnostics, { silent = true, noremap = true, bufnr = 0 })
+-- vim.keymap.set('n', '<Leader>D', ts.diagnostics, { silent = true, noremap = true })

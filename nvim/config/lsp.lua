@@ -1,18 +1,25 @@
-vim.keymap.set("n", "<Leader>rn", function()
-    local cmdId
-    cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+vim.keymap.set('n', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
+vim.keymap.set('n', '\\fd', ':silent! !dx fmt<CR>', { silent = true, noremap = true })
+vim.keymap.set('x', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
+
+vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { silent = true })
+vim.keymap.set('n', 'D', function() vim.diagnostic.open_float() end, { silent = true })
+
+vim.keymap.set("n", "<Leader>r", function()
+    local cmd_id
+    cmd_id = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
         callback = function()
             local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
             vim.api.nvim_feedkeys(key, "c", false)
             vim.api.nvim_feedkeys("0", "n", false)
-            cmdId = nil
+            cmd_id = nil
             return true
         end,
     })
     vim.lsp.buf.rename()
     vim.defer_fn(function()
-        if cmdId then
-            vim.api.nvim_del_autocmd(cmdId)
+        if cmd_id then
+            vim.api.nvim_del_autocmd(cmd_id)
         end
     end, 500)
 end)
