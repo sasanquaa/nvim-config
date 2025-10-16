@@ -3,7 +3,7 @@ function string.starts(str, start)
 end
 
 function string.replace_char(str, pos, r)
-    return table.concat { str:sub(1, pos - 1), r, str:sub(pos + 1) }
+    return table.concat { str:sub(1, math.max(pos - 1, 1)), r, str:sub(math.min(pos + 1, #str)) }
 end
 
 -- https://gist.github.com/jaredallard/ddb152179831dd23b230

@@ -18,8 +18,6 @@ set pumheight=12
 let mapleader=" "
 
 nnoremap <Leader>e :Explore<CR>
-" nnoremap <silent> u u`.
-" nnoremap <silent> <C-r> <C-r>`.
 
 exec printf('source %s/%s', stdpath('config'), 'config/plugins.lua')
 

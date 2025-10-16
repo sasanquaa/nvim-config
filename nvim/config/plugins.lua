@@ -20,6 +20,7 @@ local function source_file(name)
 end
 
 require("lazy").setup({
+    -- Markdown file preview
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -27,27 +28,33 @@ require("lazy").setup({
         build = function() vim.fn["mkdp#util#install"]() end,
     },
 
+    -- Highlights word(s) under cursor
     { "RRethy/vim-illuminate" },
 
+    -- Subword text object
     {
         "chrisgrieser/nvim-various-textobjs",
         config = function()
             require("various-textobjs").setup({ keymaps = { useDefaults = false } })
+
             vim.keymap.set({ "o", "x" }, "aw", '<cmd>lua require("various-textobjs").subword("outer")<CR>')
             vim.keymap.set({ "o", "x" }, "iw", '<cmd>lua require("various-textobjs").subword("inner")<CR>')
         end,
     },
 
+    -- Vertical scrollbar on the right side
     { "dstein64/nvim-scrollview" },
 
+    -- LSP code actions preview popup
     {
         "aznhe21/actions-preview.nvim",
         config = function()
             vim.keymap.set({ "v", "n" }, "<Leader>a", require("actions-preview").code_actions)
-            vim.keymap.set("n", "%", "<S-g><S-v>gg")
+            vim.keymap.set("n", "<Leader>%", "<S-g><S-v>gg")
         end,
     },
 
+    -- Terminal
     {
         "akinsho/toggleterm.nvim",
         version = "*",
@@ -69,10 +76,12 @@ require("lazy").setup({
         end,
     },
 
+    -- Subword motions
     {
         "chrisgrieser/nvim-spider",
         config = function()
             require('spider').setup({ skipInsignificantPunctuation = false })
+
             vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>")
             vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>")
             vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>")
@@ -85,6 +94,7 @@ require("lazy").setup({
     { "tpope/vim-commentary" },
     { "tpope/vim-surround" },
 
+    -- Fuzzy search
     {
         "nvim-telescope/telescope.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -92,10 +102,27 @@ require("lazy").setup({
             require("telescope").setup({
                 defaults = { file_ignore_patterns = { "node_modules", "target", "Cargo.lock" } },
             })
-            source_file("telescope.lua")
+
+            local ts = require('telescope.builtin')
+            local opts = { silent = true }
+
+            vim.keymap.set('n', 'gd', ts.lsp_definitions, opts)
+            vim.keymap.set('n', 'gt', ts.lsp_type_definitions, opts)
+            vim.keymap.set('n', 'gi', ts.lsp_implementations, opts)
+            vim.keymap.set('n', 'gr', ts.lsp_references, opts)
+            vim.keymap.set('n', '<Leader>f', ts.find_files, opts)
+            vim.keymap.set('n', '<Leader>/', ts.live_grep, opts)
+            vim.keymap.set('n', '<Leader>b', ts.buffers, opts)
+            vim.keymap.set('n', '<Leader>z', ts.current_buffer_fuzzy_find, opts)
+            vim.keymap.set('n', '<Leader>?', ts.keymaps, opts)
+            vim.keymap.set('n', '<Leader>s', ts.lsp_document_symbols, opts)
+            vim.keymap.set('n', '<Leader>S', ts.lsp_workspace_symbols, opts)
+            vim.keymap.set('n', '<Leader>d', function() ts.diagnostics({ bufnr = 0 }) end, opts)
+            vim.keymap.set('n', '<Leader>D', ts.diagnostics, opts)
         end,
     },
 
+    -- Theme
     {
         "ramojus/mellifluous.nvim",
         config = function()
@@ -103,27 +130,58 @@ require("lazy").setup({
         end,
     },
 
-    {
-        "haya14busa/incsearch.vim",
-        dependencies = {
-            "haya14busa/incsearch-easymotion.vim",
-            "haya14busa/incsearch-fuzzy.vim",
-            {
-                "easymotion/vim-easymotion",
-                config = function()
-                    source_file("motion.lua")
-                end,
-            },
-        },
-    },
-
+    -- Syntax and highlight
     {
         "nvim-treesitter/nvim-treesitter",
         branch = "master",
         lazy = false,
         build = ":TSUpdate",
         config = function()
-            source_file("treesitter.lua")
+            require("nvim-treesitter.configs").setup {
+                ensure_installed = {
+                    "bash",
+                    "markdown",
+                    "markdown_inline",
+                    "json",
+                    "lua",
+                    "vim",
+                    "rust",
+                    "python",
+                    "toml",
+                },
+                highlight = {
+                    enabled = true,
+                    additional_vim_regex_highlighting = false
+                },
+                always_show_bufferline = false,
+                indent = {
+                    enabled = true
+                },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ["aa"] = "@parameter.outer",
+                            ["ia"] = "@parameter.inner",
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            ["ic"] = "@class.inner",
+                        },
+                    },
+                }
+            }
+
+            local function ts_on_enter()
+                vim.cmd('TSEnable highlight')
+                vim.cmd('TSEnable indent')
+            end
+
+            vim.api.nvim_create_autocmd('VimEnter', {
+                callback = ts_on_enter,
+                desc = 'Enable Treesitter highlight and indent on startup',
+            })
         end,
     },
     {
@@ -131,26 +189,156 @@ require("lazy").setup({
         dependencies = { "nvim-treesitter/nvim-treesitter" },
     },
 
+    -- Identation indicators
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {},
     },
 
+    -- Auto pairs
+    { "windwp/nvim-autopairs" },
+
+    -- Auto completion
+    {
+        'saghen/blink.cmp',
+        dependencies = { 'rafamadriz/friendly-snippets' },
+        version = '1.*',
+        opts = {
+            keymap = {
+                preset = 'none',
+                ['<C-k>'] = { 'scroll_documentation_up', 'fallback' },
+                ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
+                ['<C-p>'] = { 'select_prev', 'fallback' },
+                ['<C-n>'] = { 'select_next', 'fallback' },
+                ['<C-space>'] = { 'show', 'fallback' },
+                ['<CR>'] = { 'select_and_accept', 'fallback' },
+                ['<TAB>'] = { 'select_and_accept', 'fallback' }
+            },
+            appearance = {
+                nerd_font_variant = 'mono'
+            },
+            completion = { documentation = { auto_show = false } },
+            sources = {
+                default = { 'lsp', 'path', 'snippets', 'buffer' },
+            },
+            accept = { auto_brackets = { enabled = true } },
+            fuzzy = { implementation = "prefer_rust_with_warning" }
+        },
+        opts_extend = { "sources.default" }
+    },
+
+    -- LSP servers installer
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {
+            ensure_installed = { "lua_ls", "vimls", "pylsp", "rust_analyzer", "taplo" },
+            automatic_installation = true
+        },
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    },
+
+    -- LSP configuration
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-            "hrsh7th/nvim-cmp",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-nvim-lsp",
-            "windwp/nvim-autopairs",
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            "lukas-reineke/lsp-format.nvim",
+            { "lukas-reineke/lsp-format.nvim", opts = {} },
         },
         config = function()
-            source_file("lsp.lua")
+            vim.keymap.set('n', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
+            vim.keymap.set('n', '\\fd', ':silent! !dx fmt<CR>', { silent = true, noremap = true })
+            vim.keymap.set('x', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
+            vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { silent = true })
+            vim.keymap.set('n', 'D', function() vim.diagnostic.open_float() end, { silent = true })
+            vim.keymap.set("n", "<Leader>r", function()
+                local cmd_id
+                cmd_id = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+                    callback = function()
+                        local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
+                        vim.api.nvim_feedkeys(key, "c", false)
+                        vim.api.nvim_feedkeys("0", "n", false)
+                        cmd_id = nil
+                        return true
+                    end,
+                })
+                vim.lsp.buf.rename()
+                vim.defer_fn(function()
+                    if cmd_id then
+                        vim.api.nvim_del_autocmd(cmd_id)
+                    end
+                end, 500)
+            end)
+            vim.api.nvim_create_autocmd({ "CmdwinEnter" }, {
+                callback = function()
+                    vim.keymap.set("n", "<esc>", ":quit<CR>", { buffer = true })
+                end,
+            })
+            vim.highlight.priorities.semantic_tokens = 95
+
+            local lsp_format = require('lsp-format')
+
+            vim.lsp.enable({ 'taplo', 'lua_ls', 'vimls', 'pylsp', 'rust_analyzer' })
+            vim.lsp.config('lua_ls', {
+                on_attach = lsp_format.on_attach,
+                on_init = function(client)
+                    if client.workspace_folders then
+                        local path = client.workspace_folders[1].name
+                        if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
+                            return
+                        end
+                    end
+                    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+                        runtime = {
+                            version = 'LuaJIT'
+                        },
+                        workspace = {
+                            checkThirdParty = false,
+                            library = {
+                                vim.env.VIMRUNTIME
+                            }
+                        }
+                    })
+                end,
+                settings = {
+                    Lua = {}
+                },
+            })
+            vim.lsp.config('vimls', {
+                on_attach = lsp_format.on_attach,
+            })
+            vim.lsp.config('pylsp', {
+                on_attach = lsp_format.on_attach,
+                settings = {
+                    pylsp = {
+                        plugins = {
+                            black = {
+                                enabled = true,
+                                line_length = 100
+                            }
+                        }
+                    }
+                }
+            })
+            vim.lsp.config('rust_analyzer', {
+                on_attach = lsp_format.on_attach,
+                settings = {
+                    ['rust-analyzer'] = {
+                        diagnostics = {
+                            enable = false
+                        },
+                        check = {
+                            command = "clippy"
+                        }
+                    }
+                },
+            })
+            vim.lsp.config('tailwindcss', {
+                on_attach = lsp_format.on_attach,
+            })
+
             source_file("lsp-lines.lua")
         end,
     },
