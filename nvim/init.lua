@@ -1,3 +1,23 @@
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.equalalways = false
+vim.opt.showtabline = 0
+vim.opt.colorcolumn = "100"
+vim.opt.number = true
+vim.opt.cursorline = true
+vim.opt.updatetime = 100
+vim.opt.signcolumn = "yes:1"
+vim.opt.backspace = { "indent", "eol", "start" }
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.pumheight = 12
+vim.g.mapleader = " "
+
+vim.keymap.set("n", "<Leader>e", ":Explore<CR>", { noremap = true, silent = true })
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -14,10 +34,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     end
 end
 vim.opt.rtp:prepend(lazypath)
-
-local function source_file(name)
-    vim.cmd('source ' .. vim.fn.stdpath('config') .. '/' .. 'config' .. '/' .. name)
-end
 
 require("lazy").setup({
     -- Markdown file preview
@@ -44,15 +60,6 @@ require("lazy").setup({
 
     -- Vertical scrollbar on the right side
     { "dstein64/nvim-scrollview" },
-
-    -- LSP code actions preview popup
-    {
-        "aznhe21/actions-preview.nvim",
-        config = function()
-            vim.keymap.set({ "v", "n" }, "<Leader>a", require("actions-preview").code_actions)
-            vim.keymap.set("n", "<Leader>%", "<S-g><S-v>gg")
-        end,
-    },
 
     -- Terminal
     {
@@ -197,7 +204,7 @@ require("lazy").setup({
     },
 
     -- Auto pairs
-    { "windwp/nvim-autopairs" },
+    { 'nvim-mini/mini.pairs', version = '*', opts = {} },
 
     -- Auto completion
     {
@@ -216,9 +223,47 @@ require("lazy").setup({
                 ['<TAB>'] = { 'select_and_accept', 'fallback' }
             },
             appearance = {
-                nerd_font_variant = 'mono'
+                nerd_font_variant = 'mono',
+                kind_icons = {
+                    Text = '',
+                    Method = '',
+                    Function = '',
+                    Constructor = '',
+
+                    Field = '',
+                    Variable = '',
+                    Property = '',
+
+                    Class = '',
+                    Interface = '',
+                    Struct = '',
+                    Module = '',
+
+                    Unit = '',
+                    Value = '',
+                    Enum = '',
+                    EnumMember = '',
+
+                    Keyword = '',
+                    Constant = '',
+
+                    Snippet = '',
+                    Color = '',
+                    File = '',
+                    Reference = '',
+                    Folder = '',
+                    Event = '',
+                    Operator = '',
+                    TypeParameter = '',
+                },
             },
-            completion = { documentation = { auto_show = false } },
+            completion = {
+                menu = { border = 'single' },
+                documentation = {
+                    window = { border = 'single' },
+                    auto_show = false
+                }
+            },
             sources = {
                 default = { 'lsp', 'path', 'snippets', 'buffer' },
             },
@@ -226,6 +271,27 @@ require("lazy").setup({
             fuzzy = { implementation = "prefer_rust_with_warning" }
         },
         opts_extend = { "sources.default" }
+    },
+
+    -- LSP code actions preview popup
+    {
+        "aznhe21/actions-preview.nvim",
+        config = function()
+            vim.keymap.set({ "v", "n" }, "<Leader>a", require("actions-preview").code_actions)
+            vim.keymap.set("n", "<Leader>%", "<S-g><S-v>gg")
+        end,
+    },
+
+    -- LSP inline diagnostics
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            require('tiny-inline-diagnostic').setup { preset = "minimal" }
+
+            vim.diagnostic.config({ virtual_text = false })
+        end
     },
 
     -- LSP servers installer
@@ -338,8 +404,6 @@ require("lazy").setup({
             vim.lsp.config('tailwindcss', {
                 on_attach = lsp_format.on_attach,
             })
-
-            source_file("lsp-lines.lua")
         end,
     },
 })
