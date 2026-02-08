@@ -101,13 +101,35 @@ require("lazy").setup({
     { "tpope/vim-commentary" },
     { "tpope/vim-surround" },
 
+    -- Text motions
+    {
+        url = "https://codeberg.org/andyg/leap.nvim",
+        enabled = true,
+        config = function()
+            local leap = require('leap')
+            leap.opts.preview_filter =
+                function(ch0, ch1, ch2)
+                    return not (
+                        ch1:match('%s') or
+                        ch0:match('%a') and ch1:match('%a') and ch2:match('%a')
+                    )
+                end
+            leap.opts.equivalence_classes = {
+                ' \t\r\n', '([{', ')]}', '\'"`'
+            }
+
+            vim.keymap.set({ 'n', 'x', 'o' }, 'gw', '<Plug>(leap)')
+            vim.keymap.set('n', 'gW', '<Plug>(leap-from-window)')
+        end,
+    },
+
     -- Fuzzy search
     {
         "nvim-telescope/telescope.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("telescope").setup({
-                defaults = { file_ignore_patterns = { "node_modules", "target", "Cargo.lock" } },
+                defaults = { file_ignore_patterns = { "%.uid", "%.tscn", "%.tres", "%.res", "project.godot", "node_modules", "target", "Cargo.lock", "addons" } },
             })
 
             local ts = require('telescope.builtin')
@@ -262,12 +284,12 @@ require("lazy").setup({
                 documentation = {
                     window = { border = 'single' },
                     auto_show = false
-                }
+                },
+                accept = { auto_brackets = { enabled = true } },
             },
             sources = {
                 default = { 'lsp', 'path', 'snippets', 'buffer' },
             },
-            accept = { auto_brackets = { enabled = true } },
             fuzzy = { implementation = "prefer_rust_with_warning" }
         },
         opts_extend = { "sources.default" }
@@ -316,6 +338,7 @@ require("lazy").setup({
         config = function()
             vim.keymap.set('n', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
             vim.keymap.set('n', '\\fd', ':silent! !dx fmt<CR>', { silent = true, noremap = true })
+            vim.keymap.set('n', '\\fg', ':silent! !gdscript-formatter --safe %<CR>', { silent = true, noremap = true })
             vim.keymap.set('x', '\\fa', function() vim.lsp.buf.format() end, { silent = true })
             vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { silent = true })
             vim.keymap.set('n', 'D', function() vim.diagnostic.open_float() end, { silent = true })
@@ -346,7 +369,7 @@ require("lazy").setup({
 
             local lsp_format = require('lsp-format')
 
-            vim.lsp.enable({ 'taplo', 'lua_ls', 'vimls', 'pylsp', 'rust_analyzer' })
+            vim.lsp.enable({ 'taplo', 'lua_ls', 'vimls', 'pylsp', 'rust_analyzer', 'gdscript' })
             vim.lsp.config('lua_ls', {
                 on_attach = lsp_format.on_attach,
                 on_init = function(client)
@@ -403,6 +426,18 @@ require("lazy").setup({
             })
             vim.lsp.config('tailwindcss', {
                 on_attach = lsp_format.on_attach,
+            })
+
+            vim.lsp.config('gdscript', {
+                on_init = function()
+                    vim.fn.serverstart("127.0.0.1:6004")
+                end
+            })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = "*.gd",
+                callback = function()
+                    vim.cmd("normal! <leader>fg")
+                end,
             })
         end,
     },
