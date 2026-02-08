@@ -436,7 +436,11 @@ require("lazy").setup({
             vim.api.nvim_create_autocmd("BufWritePre", {
                 pattern = "*.gd",
                 callback = function()
-                    vim.cmd("normal! <leader>fg")
+                    local command = { "gdscript-formatter", "--safe", vim.api.nvim_buf_get_name(0) }
+                    local result = vim.system(command):wait()
+                    if result.code == 0 then
+                        vim.cmd('e!')
+                    end
                 end,
             })
         end,
